@@ -1,8 +1,28 @@
-FROM maven:3.8.5-openjdk-17 AS build
-COPY . .
+# ---- Build stage ----
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+
+WORKDIR /app
+
+# Copy pom.xml first for caching dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source code
+COPY src ./src
+
+# Build the application (creates target/*.jar)
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/ClismaBackend-0.0.1-SNAPSHOT.jar ClismaBackend.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","ClismaBackend.jar"]
+# ---- Run stage ----
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+# Copy built JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose port 8081
+EXPOSE 8081
+
+# Run the jar
+ENTRYPOINT ["java","-jar","/app/app.jar"]
