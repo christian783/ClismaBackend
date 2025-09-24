@@ -49,6 +49,10 @@ public class VehicleDetectionService {
         vehicleDetectionRepository.save(vehicleDetection);
     }
 
+    public int getTotalNumberOfDetections() {
+        return (int) vehicleDetectionRepository.count();
+    }
+
     public void delete(final Long id) {
         final VehicleDetection vehicleDetection = vehicleDetectionRepository.findById(id)
                 .orElseThrow(NotFoundException::new);

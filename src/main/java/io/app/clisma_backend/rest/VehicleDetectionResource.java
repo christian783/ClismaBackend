@@ -33,6 +33,12 @@ public class VehicleDetectionResource {
         return ResponseEntity.ok(vehicleDetectionService.findAll());
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getVehicleCount() {
+        Integer count = vehicleDetectionService.getTotalNumberOfDetections();
+        return ResponseEntity.ok(count);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<VehicleDetectionDTO> getVehicleDetection(
             @PathVariable(name = "id") final Long id) {

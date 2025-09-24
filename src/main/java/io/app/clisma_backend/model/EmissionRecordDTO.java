@@ -13,19 +13,14 @@ public class EmissionRecordDTO {
 
     private Long id;
 
-    @Max(255)
     private Double coLevel;
 
-    @Max(255)
     private Double noxLevel;
 
-    @Max(255)
     private Double pm25Level;
 
-    @Max(255)
     private Double pm10Level;
 
-    @Max(255)
     private Double co2Level;
 
     @NotNull

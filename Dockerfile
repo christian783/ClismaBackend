@@ -1,28 +1,23 @@
-# ---- Build stage ----
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# --- Stage 1: build with Maven ---
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+WORKDIR /workspace
 
-WORKDIR /app
-
-# Copy pom.xml first for caching dependencies
+# copy only what we need first for better caching
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn -B dependency:go-offline
 
-# Copy source code
+# copy source and build
 COPY src ./src
+RUN mvn -B -DskipTests package
 
-# Build the application (creates target/*.jar)
-RUN mvn clean package -DskipTests
-
-# ---- Run stage ----
-FROM eclipse-temurin:17-jdk-alpine
-
+# --- Stage 2: run with a small JRE ---
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Copy built JAR from build stage
-COPY --from=build /app/target/*.jar app.jar
+# copy jar from build stage (assumes one jar in target)
+COPY --from=build /workspace/target/*.jar app.jar
 
-# Expose port 8081
+# expose the port your app uses (your app.properties sets 8081)
 EXPOSE 8081
 
-# Run the jar
 ENTRYPOINT ["java","-jar","/app/app.jar"]

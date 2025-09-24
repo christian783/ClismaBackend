@@ -26,7 +26,6 @@ public class AlertDTO {
     private String sentTo;
 
     @NotNull
-    @Size(max = 255)
     private AlertStatus status;
 
     private Long vehicleDetectionId;

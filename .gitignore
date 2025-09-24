@@ -24,6 +24,8 @@ application-local.properties
 .settings
 .springBeans
 .sts4-cache
+.dockerignore
+.env
 
 ## NetBeans
 /nbproject/private/

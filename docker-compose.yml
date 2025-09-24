@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    image: christian7843/clismabackend:0.0.1
+    ports:
+      - "9090:9090"
+    depends_on:
+      - postgres
+    environment:
+      JDBC_DATABASE_URL: ${JDBC_DATABASE_URL}
+      JDBC_DATABASE_USERNAME: ${JDBC_DATABASE_USERNAME}
+      JDBC_DATABASE_PASSWORD: ${JDBC_DATABASE_PASSWORD}
+      # override JPA ddl if you want: create, update, none, validate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${JDBC_DATABASE_URL}
+      POSTGRES_USER: ${JDBC_DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${JDBC_DATABASE_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
