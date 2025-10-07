@@ -2,14 +2,19 @@ package io.app.clisma_backend.service;
 
 import io.app.clisma_backend.domain.Alert;
 import io.app.clisma_backend.domain.VehicleDetection;
+import io.app.clisma_backend.domain.enums.AlertStatus;
 import io.app.clisma_backend.events.BeforeDeleteVehicleDetection;
 import io.app.clisma_backend.model.AlertDTO;
 import io.app.clisma_backend.repos.AlertRepository;
 import io.app.clisma_backend.repos.VehicleDetectionRepository;
 import io.app.clisma_backend.util.NotFoundException;
 import io.app.clisma_backend.util.ReferencedException;
+
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +31,29 @@ public class AlertService {
         this.vehicleDetectionRepository = vehicleDetectionRepository;
     }
 
-    public List<AlertDTO> findAll() {
-        final List<Alert> alerts = alertRepository.findAll(Sort.by("id"));
-        return alerts.stream()
-                .map(alert -> mapToDTO(alert, new AlertDTO()))
-                .toList();
+    // AlertService.java
+    public Page<AlertDTO> search(Long id, String type, String message, String sentTo,
+                                 AlertStatus status, OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
+        return alertRepository.search(id, type, message, sentTo, status, start, end, pageable)
+                .map(alert -> mapToDTO(alert, new AlertDTO()));
     }
 
-    public AlertDTO get(final Long id) {
-        return alertRepository.findById(id)
-                .map(alert -> mapToDTO(alert, new AlertDTO()))
-                .orElseThrow(NotFoundException::new);
+
+//    public List<AlertDTO> findAll() {
+//        final List<Alert> alerts = alertRepository.findAll(Sort.by("id"));
+//        return alerts.stream()
+//                .map(alert -> mapToDTO(alert, new AlertDTO()))
+//                .toList();
+//    }
+
+//    public AlertDTO get(final Long id) {
+//        return alertRepository.findById(id)
+//                .map(alert -> mapToDTO(alert, new AlertDTO()))
+//                .orElseThrow(NotFoundException::new);
+//    }
+
+    public int countTotalNumberOfViolations(){
+        return (int) alertRepository.count();
     }
 
     public Long create(final AlertDTO alertDTO) {

@@ -1,16 +1,7 @@
 package io.app.clisma_backend.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 
 import lombok.AllArgsConstructor;
@@ -60,8 +51,9 @@ public class EmissionRecord {
     @Column
     private Double co2Level;
 
-    @Column(nullable = false)
-    private String location;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_detection_id_id", unique = true)

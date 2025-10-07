@@ -5,7 +5,7 @@ import io.app.clisma_backend.domain.Hotspot;
 import io.app.clisma_backend.repos.EmissionRecordRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
@@ -82,11 +82,11 @@ public class PollutionCalculatorService {
     }
 
     // ==== Main Calculation ====
-    public double calculatePollutionLevel(String location, LocalDateTime endTime,
+    public double calculatePollutionLevel(String location, OffsetDateTime endTime,
                                           ChronoUnit averagingUnit, long duration,
                                           boolean useWeighted) {
 
-        LocalDateTime startTime = endTime.minus(duration, averagingUnit);
+        OffsetDateTime startTime = endTime.minus(duration, averagingUnit);
         List<EmissionRecord> records =
                 emissionRepository.findByLocationAndTimestampBetween(location, startTime, endTime);
 
@@ -118,8 +118,8 @@ public class PollutionCalculatorService {
     // Example: update a hotspot with 24-hour AQI
     public void updateHotspot(Hotspot hotspot, boolean useWeighted) {
         double level = calculatePollutionLevel(
-                hotspot.getLocation(),
-                LocalDateTime.now(),
+                hotspot.getLocation().getName(),
+                OffsetDateTime.now(),
                 ChronoUnit.HOURS,
                 24,
                 useWeighted = false

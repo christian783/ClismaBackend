@@ -1,21 +1,23 @@
 package io.app.clisma_backend.rest;
 
+import io.app.clisma_backend.domain.enums.VehicleType;
 import io.app.clisma_backend.model.VehicleDetectionDTO;
 import io.app.clisma_backend.service.VehicleDetectionService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import java.util.List;
+
+import java.time.OffsetDateTime;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -28,10 +30,25 @@ public class VehicleDetectionResource {
         this.vehicleDetectionService = vehicleDetectionService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<VehicleDetectionDTO>> getAllVehicleDetections() {
-        return ResponseEntity.ok(vehicleDetectionService.findAll());
+    // VehicleDetectionController.java
+    @GetMapping("/search")
+    public ResponseEntity<Page<VehicleDetectionDTO>> search(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String licensePlate,
+            @RequestParam(required = false) String imageUrl,
+            @RequestParam(required = false) VehicleType vehicleType,
+            @RequestParam(required = false) Long locationId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end,
+            @ParameterObject @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(vehicleDetectionService.search(id, licensePlate, imageUrl, vehicleType,locationId, start, end, pageable));
     }
+
+
+//    @GetMapping
+//    public ResponseEntity<List<VehicleDetectionDTO>> getAllVehicleDetections() {
+//        return ResponseEntity.ok(vehicleDetectionService.findAll());
+//    }
 
     @GetMapping("/count")
     public ResponseEntity<Integer> getVehicleCount() {
@@ -39,11 +56,11 @@ public class VehicleDetectionResource {
         return ResponseEntity.ok(count);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<VehicleDetectionDTO> getVehicleDetection(
-            @PathVariable(name = "id") final Long id) {
-        return ResponseEntity.ok(vehicleDetectionService.get(id));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<VehicleDetectionDTO> getVehicleDetection(
+//            @PathVariable(name = "id") final Long id) {
+//        return ResponseEntity.ok(vehicleDetectionService.get(id));
+//    }
 
     @PostMapping
     @ApiResponse(responseCode = "201")

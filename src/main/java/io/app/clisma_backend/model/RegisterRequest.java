@@ -1,6 +1,6 @@
 package io.app.clisma_backend.model;
 
-import io.app.clisma_backend.domain.UserRole;
+import io.app.clisma_backend.domain.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

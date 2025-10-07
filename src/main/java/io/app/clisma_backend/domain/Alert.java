@@ -1,5 +1,6 @@
 package io.app.clisma_backend.domain;
 
+import io.app.clisma_backend.domain.enums.AlertStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

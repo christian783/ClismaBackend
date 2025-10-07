@@ -4,7 +4,12 @@ import io.app.clisma_backend.domain.Hotspot;
 import io.app.clisma_backend.model.HotspotDTO;
 import io.app.clisma_backend.repos.HotspotRepository;
 import io.app.clisma_backend.util.NotFoundException;
+
+import java.time.OffsetDateTime;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +23,20 @@ public class HotspotService {
         this.hotspotRepository = hotspotRepository;
     }
 
-    public List<HotspotDTO> findAll() {
-        final List<Hotspot> hotspots = hotspotRepository.findAll(Sort.by("id"));
-        return hotspots.stream()
-                .map(hotspot -> mapToDTO(hotspot, new HotspotDTO()))
-                .toList();
+//    public List<HotspotDTO> findAll() {
+//        final List<Hotspot> hotspots = hotspotRepository.findAll(Sort.by("id"));
+//        return hotspots.stream()
+//                .map(hotspot -> mapToDTO(hotspot, new HotspotDTO()))
+//                .toList();
+//    }
+
+    // HotspotService.java
+    public Page<HotspotDTO> search(Long id, Long locationId,Double pollutionLevel, OffsetDateTime start,
+                                   OffsetDateTime end, Pageable pageable) {
+        return hotspotRepository.search(id,locationId,pollutionLevel, start, end, pageable)
+                .map(hotspot -> mapToDTO(hotspot, new HotspotDTO()));
     }
+
 
     public HotspotDTO get(final Long id) {
         return hotspotRepository.findById(id)
@@ -42,6 +55,10 @@ public class HotspotService {
                 .orElseThrow(NotFoundException::new);
         mapToEntity(hotspotDTO, hotspot);
         hotspotRepository.save(hotspot);
+    }
+
+    public Integer getTotalNumberOfHotspots() {
+        return (int) hotspotRepository.count();
     }
 
     public void delete(final Long id) {

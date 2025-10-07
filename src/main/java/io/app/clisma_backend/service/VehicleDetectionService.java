@@ -1,12 +1,17 @@
 package io.app.clisma_backend.service;
 
 import io.app.clisma_backend.domain.VehicleDetection;
+import io.app.clisma_backend.domain.enums.VehicleType;
 import io.app.clisma_backend.events.BeforeDeleteVehicleDetection;
 import io.app.clisma_backend.model.VehicleDetectionDTO;
 import io.app.clisma_backend.repos.VehicleDetectionRepository;
 import io.app.clisma_backend.util.NotFoundException;
+
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +28,19 @@ public class VehicleDetectionService {
         this.publisher = publisher;
     }
 
-    public List<VehicleDetectionDTO> findAll() {
-        final List<VehicleDetection> vehicleDetections = vehicleDetectionRepository.findAll(Sort.by("id"));
-        return vehicleDetections.stream()
-                .map(vehicleDetection -> mapToDTO(vehicleDetection, new VehicleDetectionDTO()))
-                .toList();
+    // VehicleDetectionService.java
+    public Page<VehicleDetectionDTO> search(Long id, String licensePlate, String imageUrl,
+                                            VehicleType vehicleType,Long emissionRecordId,OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
+        return vehicleDetectionRepository.search(id, licensePlate, imageUrl, vehicleType,emissionRecordId, start, end, pageable)
+                .map(vehicleDetection -> mapToDTO(vehicleDetection, new VehicleDetectionDTO()));
     }
+
+//    public List<VehicleDetectionDTO> findAll() {
+//        final List<VehicleDetection> vehicleDetections = vehicleDetectionRepository.findAll(Sort.by("id"));
+//        return vehicleDetections.stream()
+//                .map(vehicleDetection -> mapToDTO(vehicleDetection, new VehicleDetectionDTO()))
+//                .toList();
+//    }
 
     public VehicleDetectionDTO get(final Long id) {
         return vehicleDetectionRepository.findById(id)

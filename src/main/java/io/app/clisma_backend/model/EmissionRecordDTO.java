@@ -1,5 +1,6 @@
 package io.app.clisma_backend.model;
 
+import io.app.clisma_backend.domain.Location;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,8 +25,7 @@ public class EmissionRecordDTO {
     private Double co2Level;
 
     @NotNull
-    @Size(max = 255)
-    private String location;
+    private Location location;
 
     @EmissionRecordVehicleDetectionIdUnique
     private Long vehicleDetectionId;

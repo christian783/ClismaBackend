@@ -4,18 +4,21 @@ import io.app.clisma_backend.model.EmissionRecordDTO;
 import io.app.clisma_backend.service.EmissionRecordService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -33,10 +36,43 @@ public class EmissionRecordResource {
         return ResponseEntity.ok(emissionRecordService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EmissionRecordDTO> getEmissionRecord(
-            @PathVariable(name = "id") final Long id) {
-        return ResponseEntity.ok(emissionRecordService.get(id));
+    // EmissionRecordController.java
+    @GetMapping("/search")
+    public ResponseEntity<Page<EmissionRecordDTO>> search(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Double coLevel,
+            @RequestParam(required = false) Double noxLevel,
+            @RequestParam(required = false) Double pm25Level,
+            @RequestParam(required = false) Double pm10Level,
+            @RequestParam(required = false) Long locationId,
+            @RequestParam(required = false) Long vehicleDetectionId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end,
+            @ParameterObject @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(emissionRecordService.search(id, coLevel, noxLevel, pm25Level, pm10Level,
+                locationId, vehicleDetectionId, start, end, pageable));
+    }
+
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<EmissionRecordDTO> getEmissionRecord(
+//            @PathVariable(name = "id") final Long id) {
+//        return ResponseEntity.ok(emissionRecordService.get(id));
+//    }
+
+    @GetMapping("/averages/adjustable")
+    public Map<String, Map<String, Double>> getIntervalAverages(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime endDate,
+            @RequestParam String interval) {
+
+        return emissionRecordService.calculateIntervalAverageEmissionRates(startDate, endDate, interval);
+    }
+
+    @GetMapping("/averages")
+    public ResponseEntity<Map<String,Double>> getAverageEmissions() {
+        Map<String,Double> averages = emissionRecordService.calculateAverageEmissionRates();
+        return ResponseEntity.ok(averages);
     }
 
     @PostMapping

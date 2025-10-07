@@ -1,5 +1,6 @@
 package io.app.clisma_backend.model;
 
+import io.app.clisma_backend.domain.Location;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -14,8 +15,7 @@ public class HotspotDTO {
     private Long id;
 
     @NotNull
-    @Size(max = 255)
-    private String location;
+    private Location location;
 
     @NotNull
     private Double pollutionLevel;

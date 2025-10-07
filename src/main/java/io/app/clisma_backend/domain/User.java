@@ -1,5 +1,6 @@
 package io.app.clisma_backend.domain;
 
+import io.app.clisma_backend.domain.enums.UserRole;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -50,7 +51,7 @@ public class User implements UserDetails {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.AUTHORITY;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

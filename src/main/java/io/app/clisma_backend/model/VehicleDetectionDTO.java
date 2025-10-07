@@ -1,5 +1,6 @@
 package io.app.clisma_backend.model;
 
+import io.app.clisma_backend.domain.enums.VehicleType;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +17,7 @@ public class VehicleDetectionDTO {
 
     @Size(max = 255)
     private String imageUrl;
+
+    private VehicleType vehicleType;
 
 }

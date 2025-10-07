@@ -1,6 +1,6 @@
 package io.app.clisma_backend.model;
 
-import io.app.clisma_backend.domain.UserRole;
+import io.app.clisma_backend.domain.enums.UserRole;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

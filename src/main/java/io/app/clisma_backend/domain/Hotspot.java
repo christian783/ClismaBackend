@@ -1,13 +1,7 @@
 package io.app.clisma_backend.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 
 import lombok.AllArgsConstructor;
@@ -42,8 +36,9 @@ public class Hotspot {
     )
     private Long id;
 
-    @Column(nullable = false)
-    private String location;
+    @OneToOne
+    @JoinColumn(name = "location_id", nullable = false, unique = true)
+    private Location location;
 
     @Column(name = "pollution_level", nullable = false)
     private Double pollutionLevel;
