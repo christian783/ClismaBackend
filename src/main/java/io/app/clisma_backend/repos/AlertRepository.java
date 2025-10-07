@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public interface AlertRepository extends JpaRepository<Alert, Long> {
     @Query("SELECT a FROM Alert a WHERE " +
@@ -17,8 +18,8 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
             "(:message IS NULL OR a.message LIKE %:message%) AND " +
             "(:sentTo IS NULL OR a.sentTo LIKE %:sentTo%) AND " +
             "(CAST(:status AS STRING) IS NULL OR CAST(a.status AS STRING) = CAST(:status AS STRING)) AND " +
-            "(CAST(:start AS STRING) IS NULL OR a.dateCreated >= :start) AND " +
-            "(CAST(:end AS STRING) IS NULL OR a.lastUpdated <= :end)")
+            "(CAST(:start AS STRING) IS NULL OR CAST(a.dateCreated AS STRING) >= CAST(:start AS STRING)) AND " +
+            "(CAST(:end AS STRING) IS NULL OR CAST(a.lastUpdated AS STRING) <= CAST(:end AS STRING))")
     Page<Alert> search(@Param("id") Long id,
                        @Param("type") String type,
                        @Param("message") String message,
@@ -29,4 +30,5 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
                        Pageable pageable);
 
     Alert findFirstByVehicleDetectionIdId(Long id);
+    List<Alert> findByDateCreatedBetween(OffsetDateTime startDate, OffsetDateTime endDate);
 }

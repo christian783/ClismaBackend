@@ -51,8 +51,11 @@ public class VehicleDetectionResource {
 //    }
 
     @GetMapping("/count")
-    public ResponseEntity<Integer> getVehicleCount() {
-        Integer count = vehicleDetectionService.getTotalNumberOfDetections();
+    public ResponseEntity<Integer> getVehicleCount(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end
+    ) {
+        Integer count = vehicleDetectionService.getTotalNumberOfDetections(start,end);
         return ResponseEntity.ok(count);
     }
 

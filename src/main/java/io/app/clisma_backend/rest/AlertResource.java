@@ -71,8 +71,11 @@ public class AlertResource {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Integer> getViolationsCount() {
-        Integer count = alertService.countTotalNumberOfViolations();
+    public ResponseEntity<Integer> getViolationsCount(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end
+    ) {
+        Integer count = alertService.countTotalNumberOfViolations(start, end);
         return ResponseEntity.ok(count);
     }
 

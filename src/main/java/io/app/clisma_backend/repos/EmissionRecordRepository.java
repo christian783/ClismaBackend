@@ -20,15 +20,15 @@ public interface EmissionRecordRepository extends JpaRepository<EmissionRecord, 
             "(CAST(:pm10Level AS string) IS NULL OR CAST(e.pm10Level AS string) = CAST(:pm10Level AS string)) AND"+
             "(:locationId IS NULL OR :locationId = l.id) AND " +
             "(:vehicleDetectionId IS NULL OR :vehicleDetectionId = e.vehicleDetectionId) AND " +
-            "(CAST(:start AS STRING ) IS NULL OR e.dateCreated >= :start) AND " +
-            "(CAST(:end AS STRING ) IS NULL OR e.lastUpdated <= :end)")
+            "(CAST(:start AS STRING) IS NULL OR CAST(e.dateCreated AS STRING) >= CAST(:start AS STRING)) AND " +
+            "(CAST(:end AS STRING) IS NULL OR CAST(e.lastUpdated AS STRING) <= CAST(:end AS STRING))")
     Page<EmissionRecord> search(@Param("id") Long id,
                                 @Param("coLevel") Double coLevel,
                                 @Param("noxLevel") Double noxLevel,
                                 @Param("pm25Level") Double pm25Level,
                                 @Param("pm10Level") Double pm10Level,
                                 @Param("locationId") Long locationId,
-                                @Param("vehicleDetection") Long vehicleDetectionId,
+                                @Param("vehicleDetectionId") Long vehicleDetectionId,
                                 @Param("start") OffsetDateTime created,
                                 @Param("end") OffsetDateTime lastUpdated,
                                 Pageable pageable

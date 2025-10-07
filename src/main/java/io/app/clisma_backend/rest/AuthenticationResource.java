@@ -1,9 +1,8 @@
 package io.app.clisma_backend.rest;
 
-import io.app.clisma_backend.model.AuthenticationRequest;
-import io.app.clisma_backend.model.AuthenticationResponse;
-import io.app.clisma_backend.model.RegisterRequest;
+import io.app.clisma_backend.model.*;
 import io.app.clisma_backend.service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,18 @@ public class AuthenticationResource {
 
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
+    public ResponseEntity<LoginResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
         return ResponseEntity.ok(authenticationService.login(authenticationRequest));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request){
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@Valid @RequestBody RefreshTokenRequest request){
+        authenticationService.logoutUser(request);
+        return ResponseEntity.noContent().build();
     }
 }

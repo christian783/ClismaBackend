@@ -61,8 +61,8 @@ public class VehicleDetectionService {
         vehicleDetectionRepository.save(vehicleDetection);
     }
 
-    public int getTotalNumberOfDetections() {
-        return (int) vehicleDetectionRepository.count();
+    public int getTotalNumberOfDetections(OffsetDateTime start, OffsetDateTime end) {
+        return (int) vehicleDetectionRepository.findByDateCreatedBetween(start, end).stream().count();
     }
 
     public void delete(final Long id) {

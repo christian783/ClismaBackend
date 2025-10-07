@@ -52,8 +52,8 @@ public class AlertService {
 //                .orElseThrow(NotFoundException::new);
 //    }
 
-    public int countTotalNumberOfViolations(){
-        return (int) alertRepository.count();
+    public int countTotalNumberOfViolations(OffsetDateTime start, OffsetDateTime end){
+        return (int) alertRepository.findByDateCreatedBetween(start, end).stream().count();
     }
 
     public Long create(final AlertDTO alertDTO) {

@@ -16,8 +16,8 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
             "(:description IS NULL OR l.description LIKE %:description%) AND " +
             "(CAST(:latitude AS string) IS NULL OR CAST(l.latitude AS string) = CAST(:latitude AS string)) AND " +
             "(CAST(:longitude AS string) IS NULL OR CAST(l.longitude AS string) = CAST(:longitude AS string)) AND " +
-            "(CAST(:start AS STRING) IS NULL OR l.dateCreated >= :start) AND " +
-            "(CAST(:end AS STRING) IS NULL OR l.lastUpdated <= :end)")
+            "(CAST(:start AS STRING) IS NULL OR CAST(l.dateCreated AS STRING) >= CAST(:start AS STRING)) AND " +
+            "(:end IS NULL OR l.lastUpdated <= :end)")
     Page<Location> search(@Param("id") Long id,
                           @Param("name") String name,
                           @Param("description") String description,
