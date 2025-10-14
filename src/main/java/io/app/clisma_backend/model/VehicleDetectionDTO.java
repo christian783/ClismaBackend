@@ -20,4 +20,6 @@ public class VehicleDetectionDTO {
 
     private VehicleType vehicleType;
 
+    private Long userId;
+
 }

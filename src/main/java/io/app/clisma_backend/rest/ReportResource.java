@@ -3,6 +3,7 @@ package io.app.clisma_backend.rest;
 import io.app.clisma_backend.domain.Report;
 import io.app.clisma_backend.service.ReportService;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.time.OffsetDateTime;
 
 @RestController
 @RequestMapping("/api/reports")

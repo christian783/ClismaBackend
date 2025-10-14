@@ -18,6 +18,6 @@ WORKDIR /app
 COPY --from=build /workspace/target/*.jar app.jar
 
 # expose the port your app uses (your app.properties sets 8081)
-EXPOSE 8081
+EXPOSE 8082
 
 ENTRYPOINT ["java","-jar","/app/app.jar"]

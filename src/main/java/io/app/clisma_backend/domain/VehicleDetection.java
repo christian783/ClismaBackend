@@ -57,6 +57,9 @@ public class VehicleDetection {
     @OneToMany(mappedBy = "vehicleDetectionId")
     private Set<Alert> alerts = new HashSet<>();
 
+    @ManyToOne
+    private User vehicleOwner;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;

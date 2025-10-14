@@ -1,5 +1,6 @@
 package io.app.clisma_backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -36,20 +37,23 @@ public class EmissionRecord {
     )
     private Long id;
 
-    @Column
-    private Double coLevel;
+    @JsonProperty("AQI")
+    private double aqi;
 
-    @Column
-    private Double noxLevel;
+    @JsonProperty("CO_PPM")
+    private double coPpm;
 
-    @Column
-    private Double pm25Level;
+    @JsonProperty("MQ135")
+    private int mq135;
 
-    @Column
-    private Double pm10Level;
+    @JsonProperty("MQ135_R")
+    private double mq135R;
 
-    @Column
-    private Double co2Level;
+    @JsonProperty("MQ7")
+    private int mq7;
+
+    @JsonProperty("MQ7_R")
+    private double mq7R;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")

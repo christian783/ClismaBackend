@@ -1,0 +1,40 @@
+name: CI/CD - Build & Publish Docker image
+
+on:
+  push:
+    branches:
+      - prod  # change this to 'main' if that's your default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 🧩 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 🧰 2. Log in to GitHub Container Registry (GHCR)
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CLISMA_PAT }}  # You will create this secret next
+
+      # 🏗️ 3. Build and push Docker image
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/christian783/clismabackend:latest
+            ghcr.io/christian783/clismabackend:${{ github.sha }}
+
+      # ✅ 4. Confirm build success
+      - name: Verify push
+        run: echo "✅ Docker image successfully built and pushed to GHCR!"

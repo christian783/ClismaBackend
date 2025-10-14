@@ -4,6 +4,7 @@ import io.app.clisma_backend.domain.Hotspot;
 import io.app.clisma_backend.repos.HotspotRepository;
 import io.app.clisma_backend.service.PollutionCalculatorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@EnableScheduling
 public class HotspotUpdater {
 
     private final PollutionCalculatorService calculator;

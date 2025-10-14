@@ -38,22 +38,22 @@
 //
 //            // Create sample vehicle detections
 //            List<VehicleDetection> detections = Arrays.asList(
-//                    new VehicleDetection(null, "ABC123", "vehicle1.jpg", VehicleType.CAR, null, new HashSet<>(),
+//                    new VehicleDetection(null, "ABC123", "vehicle1.jpg", VehicleType.CAR, null, new HashSet<>(),null,
 //                            OffsetDateTime.now(), OffsetDateTime.now()),
-//                    new VehicleDetection(null, "XYZ789", "vehicle2.jpg", VehicleType.TRUCK, null, new HashSet<>(),
+//                    new VehicleDetection(null, "XYZ789", "vehicle2.jpg", VehicleType.TRUCK, null, new HashSet<>(),null,
 //                            OffsetDateTime.now(), OffsetDateTime.now()),
-//                    new VehicleDetection(null, "DEF456", "vehicle3.jpg", VehicleType.BUS, null, new HashSet<>(),
+//                    new VehicleDetection(null, "DEF456", "vehicle3.jpg", VehicleType.BUS, null, new HashSet<>(),null,
 //                            OffsetDateTime.now(), OffsetDateTime.now())
 //            );
 //            vehicleDetectionRepository.saveAll(detections);
 //
 //            // Create sample emission records
 //            List<EmissionRecord> emissions = Arrays.asList(
-//                    new EmissionRecord(null, 2.5, 0.8, 15.0, 25.0, 150.0, locations.get(0), detections.get(0),
+//                    new EmissionRecord(null, 2.5, 0.8, 15,16.0, 25, 150.0, locations.get(0), detections.get(0),
 //                            OffsetDateTime.now(), OffsetDateTime.now()),
-//                    new EmissionRecord(null, 3.1, 1.2, 18.0, 30.0, 180.0, locations.get(1), detections.get(1),
+//                    new EmissionRecord(null, 3.1, 1.2, 18,16.0, 30, 180.0, locations.get(1), detections.get(1),
 //                            OffsetDateTime.now(), OffsetDateTime.now()),
-//                    new EmissionRecord(null, 1.8, 0.6, 12.0, 20.0, 130.0, locations.get(2), detections.get(2),
+//                    new EmissionRecord(null, 1.8, 0.6, 12,16.0, 20, 130.0, locations.get(2), detections.get(2),
 //                            OffsetDateTime.now(), OffsetDateTime.now())
 //            );
 //            emissionRecordRepository.saveAll(emissions);

@@ -19,7 +19,7 @@ public interface VehicleDetectionRepository extends JpaRepository<VehicleDetecti
             "(:licensePlate IS NULL OR v.licensePlate LIKE %:licensePlate%) AND " +
             "(:imageUrl IS NULL OR v.imageUrl LIKE %:imageUrl%) AND " +
             "(CAST(:vehicleType AS STRING) IS NULL OR CAST(v.vehicleType AS STRING) = CAST(:vehicleType AS STRING)) AND " +
-            "(:emissionRecordId IS NULL OR :emissionRecordId = e.id) AND " +
+            "(:emissionRecordId IS NULL OR e.id = :emissionRecordId) AND " +
             "(CAST(:start AS STRING) IS NULL OR CAST(v.dateCreated AS STRING) >= CAST(:start AS STRING)) AND " +
             "(CAST(:end AS STRING) IS NULL OR CAST(v.lastUpdated AS STRING) <= CAST(:end AS STRING))")
     Page<VehicleDetection> search(@Param("id") Long id,

@@ -30,7 +30,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests( authorize -> authorize.requestMatchers("/api/v1/auth/**",
+                .authorizeHttpRequests( authorize -> authorize.requestMatchers(
+                                "/api/v1/auth/**",
                                 "/api/auth/**",
                                 "/swagger-ui/**",         // for the Swagger UI frontend
                                 "/v3/api-docs/**",        // for the OpenAPI JSON

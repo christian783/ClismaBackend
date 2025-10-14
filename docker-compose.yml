@@ -1,29 +1,53 @@
-version: "3.8"
-services:
-  app:
-    build: .
-    image: christian7843/clismabackend:0.0.1
-    ports:
-      - "9090:9090"
-    depends_on:
-      - postgres
-    environment:
-      JDBC_DATABASE_URL: ${JDBC_DATABASE_URL}
-      JDBC_DATABASE_USERNAME: ${JDBC_DATABASE_USERNAME}
-      JDBC_DATABASE_PASSWORD: ${JDBC_DATABASE_PASSWORD}
-      # override JPA ddl if you want: create, update, none, validate
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+version: "3.9"
 
-  postgres:
-    image: postgres:15
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: clisma_db
     environment:
-      POSTGRES_DB: ${JDBC_DATABASE_URL}
-      POSTGRES_USER: ${JDBC_DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${JDBC_DATABASE_PASSWORD}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      POSTGRES_USER: clisma
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: clisma_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    networks:
+      - backend_net
+
+  app:
+    image: ghcr.io/christian783/clismabackend:latest
+    container_name: clisma_app
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    restart: on-failure
+    networks:
+      - backend_net
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: clisma_watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --cleanup --debug
+    networks:
+      - backend_net
 
 volumes:
-  pgdata:
+  pg_data:
+
+networks:
+  backend_net:
+    driver: bridge

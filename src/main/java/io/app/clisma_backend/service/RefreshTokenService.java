@@ -4,7 +4,6 @@ import io.app.clisma_backend.domain.RefreshToken;
 import io.app.clisma_backend.domain.User;
 import io.app.clisma_backend.repos.RefreshTokenRepository;
 import io.app.clisma_backend.repos.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

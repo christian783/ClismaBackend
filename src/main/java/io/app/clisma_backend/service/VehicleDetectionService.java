@@ -77,6 +77,7 @@ public class VehicleDetectionService {
         vehicleDetectionDTO.setId(vehicleDetection.getId());
         vehicleDetectionDTO.setLicensePlate(vehicleDetection.getLicensePlate());
         vehicleDetectionDTO.setImageUrl(vehicleDetection.getImageUrl());
+        vehicleDetectionDTO.setVehicleType(vehicleDetection.getVehicleType());
         return vehicleDetectionDTO;
     }
 
@@ -84,6 +85,7 @@ public class VehicleDetectionService {
             final VehicleDetection vehicleDetection) {
         vehicleDetection.setLicensePlate(vehicleDetectionDTO.getLicensePlate());
         vehicleDetection.setImageUrl(vehicleDetectionDTO.getImageUrl());
+        vehicleDetection.setVehicleType(vehicleDetectionDTO.getVehicleType());
         return vehicleDetection;
     }
 

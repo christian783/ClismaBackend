@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.OffsetDateTime;
 
 @RestController
-@RequestMapping("/api/v1/locations")
+@RequestMapping("/api/locations")
 @RequiredArgsConstructor
 public class LocationController {
     private final LocationService locationService;

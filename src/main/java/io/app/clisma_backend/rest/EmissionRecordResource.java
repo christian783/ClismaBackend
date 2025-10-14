@@ -1,6 +1,8 @@
 package io.app.clisma_backend.rest;
 
-import io.app.clisma_backend.model.EmissionRecordDTO;
+import io.app.clisma_backend.domain.enums.VehicleType;
+import io.app.clisma_backend.model.EmissionRecordRequest;
+import io.app.clisma_backend.model.EmissionRecordResponse;
 import io.app.clisma_backend.service.EmissionRecordService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -31,26 +33,43 @@ public class EmissionRecordResource {
         this.emissionRecordService = emissionRecordService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<EmissionRecordDTO>> getAllEmissionRecords() {
-        return ResponseEntity.ok(emissionRecordService.findAll());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<EmissionRecordRequest>> getAllEmissionRecords() {
+//        return ResponseEntity.ok(emissionRecordService.findAll());
+//    }
 
     // EmissionRecordController.java
     @GetMapping("/search")
-    public ResponseEntity<Page<EmissionRecordDTO>> search(
+    public ResponseEntity<Page<EmissionRecordResponse>> search(
             @RequestParam(required = false) Long id,
-            @RequestParam(required = false) Double coLevel,
-            @RequestParam(required = false) Double noxLevel,
-            @RequestParam(required = false) Double pm25Level,
-            @RequestParam(required = false) Double pm10Level,
+            @RequestParam(required = false) Double aqi,
+            @RequestParam(required = false) Double coPpm,
+            @RequestParam(required = false) Integer mq135,
+            @RequestParam(required = false) Double mq135R,
+            @RequestParam(required = false) Integer mq7,
+            @RequestParam(required = false) Double mq7R,
             @RequestParam(required = false) Long locationId,
             @RequestParam(required = false) Long vehicleDetectionId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end,
             @ParameterObject @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(emissionRecordService.search(id, coLevel, noxLevel, pm25Level, pm10Level,
+        return ResponseEntity.ok(emissionRecordService.search(id, aqi, coPpm, mq135, mq135R, mq7, mq7R,
                 locationId, vehicleDetectionId, start, end, pageable));
+    }
+
+    /**
+     * Returns a list of vehicles with the highest pollution levels.
+     *
+     * @param pollutantType The type of pollutant to sort by (co, nox, pm25, pm10, co2, or total)
+     * @param limit The maximum number of vehicles to return (defaults to 10)
+     * @return A list of the highest polluting vehicles with their emission data
+     */
+    @GetMapping("/highest-polluters")
+    public ResponseEntity<List<Map<String, Object>>> getHighestPollutingVehicles(
+            @RequestParam(defaultValue = "total") String pollutantType,
+            @RequestParam(defaultValue = "10") int limit) {
+        List<Map<String, Object>> highestPolluters = emissionRecordService.getHighestPollutingVehicles(pollutantType, limit);
+        return ResponseEntity.ok(highestPolluters);
     }
 
 
@@ -75,17 +94,23 @@ public class EmissionRecordResource {
         return ResponseEntity.ok(averages);
     }
 
+    @GetMapping("/averages/vehicleType/{vehicleType}")
+    public ResponseEntity<Map<String,Double>> calculateAverageEmissionLevelsByVehicleType(@PathVariable("vehicleType") VehicleType vehicleType) {
+        Map<String,Double> averages = emissionRecordService.calculateAverageEmissionLevelsByVehicleType(vehicleType);
+        return ResponseEntity.ok(averages);
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createEmissionRecord(
-            @RequestBody @Valid final EmissionRecordDTO emissionRecordDTO) {
+            @RequestBody @Valid final EmissionRecordRequest emissionRecordDTO) {
         final Long createdId = emissionRecordService.create(emissionRecordDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateEmissionRecord(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final EmissionRecordDTO emissionRecordDTO) {
+            @RequestBody @Valid final EmissionRecordRequest emissionRecordDTO) {
         emissionRecordService.update(id, emissionRecordDTO);
         return ResponseEntity.ok(id);
     }

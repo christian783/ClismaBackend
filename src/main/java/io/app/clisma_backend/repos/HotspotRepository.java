@@ -15,7 +15,7 @@ public interface HotspotRepository extends JpaRepository<Hotspot, Long> {
     @Query("SELECT h FROM Hotspot h " +
             "LEFT JOIN h.location l WHERE" +
             "(:id IS NULL OR h.id = :id) AND " +
-            ":locationId IS NULL OR :locationId = l.id AND" +
+            ":locationId IS NULL OR l.id = :locationId AND" +
             "(CAST(:pollutionLevel AS string) IS NULL OR CAST(h.pollutionLevel AS string) = CAST(:pollutionLevel AS string)) AND " +
             "(CAST(:start AS STRING) IS NULL OR CAST(h.dateCreated AS STRING) >= CAST(:start AS STRING)) AND " +
             "(CAST(:end AS STRING) IS NULL OR CAST(h.lastUpdated AS STRING) <= CAST(:end AS STRING))")
